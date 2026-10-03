@@ -1,0 +1,29 @@
+services:
+  backend:
+    build:
+      context: ./backend
+    container_name: virtual-ai-backend
+    ports:
+      - "8000:8000"
+    volumes:
+      - ./backend:/app
+    environment:
+      - DATABASE_URL=postgresql://robot:robot_password@postgres:5432/virtual_robot
+    depends_on:
+      - postgres
+
+  postgres:
+    image: postgres:16
+    container_name: virtual-ai-postgres
+    restart: unless-stopped
+    environment:
+      POSTGRES_DB: virtual_robot
+      POSTGRES_USER: robot
+      POSTGRES_PASSWORD: robot_password
+    ports:
+      - "5432:5432"
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+
+volumes:
+  postgres_data:
